@@ -20,7 +20,7 @@ def main():
     
     # Initial state
     initial_state = {
-        "skills": ["python", "fastapi"],
+        "skills": ["node.js", "machine learning", "data analysis"],
         "selected_issue_urls": [],
         "analyses": [],
         "user_choice": None,

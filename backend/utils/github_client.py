@@ -5,8 +5,20 @@ import os
 import requests
 from typing import List, Dict
 
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 GITHUB_API_URL = "https://api.github.com"
+
+
+def _get_headers():
+    """Get GitHub API headers with authentication."""
+    token = os.getenv("GITHUB_TOKEN")
+    if not token:
+        raise ValueError("GITHUB_TOKEN not found in environment variables")
+    
+    return {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+
 
 def search_good_first_issues(skills: List[str], max_results: int = 15) -> List[Dict]:
     """
@@ -19,14 +31,39 @@ def search_good_first_issues(skills: List[str], max_results: int = 15) -> List[D
     Returns:
         List of issue dictionaries with url, title, repo, and labels
     """
-    headers = {
-        "Authorization": f"token {GITHUB_TOKEN}",
-        "Accept": "application/vnd.github.v3+json"
+    try:
+        headers = _get_headers()
+    except ValueError as e:
+        print(f"❌ ERROR: {e}")
+        return []
+    
+    # Map frameworks to their underlying languages
+    language_map = {
+        "fastapi": "python",
+        "django": "python",
+        "flask": "python",
+        "react": "javascript",
+        "vue": "javascript",
+        "angular": "typescript",
+        "express": "javascript",
+        "nextjs": "javascript",
     }
     
-    # Build search query
-    language_query = " OR ".join([f"language:{skill}" for skill in skills])
-    query = f'is:issue is:open label:"good first issue" ({language_query})'
+    # Convert skills to proper GitHub languages
+    languages = set()
+    for skill in skills:
+        skill_lower = skill.lower()
+        if skill_lower in language_map:
+            languages.add(language_map[skill_lower])
+        else:
+            languages.add(skill_lower)
+    
+    # Build search query with proper languages
+    if languages:
+        language_query = " ".join([f"language:{lang}" for lang in languages])
+        query = f'is:issue is:open label:"good first issue" {language_query}'
+    else:
+        query = 'is:issue is:open label:"good first issue"'
     
     params = {
         "q": query,
@@ -35,6 +72,8 @@ def search_good_first_issues(skills: List[str], max_results: int = 15) -> List[D
         "per_page": max_results
     }
     
+    print(f"🔍 Searching GitHub with query: {query}")
+    
     try:
         response = requests.get(
             f"{GITHUB_API_URL}/search/issues",
@@ -42,9 +81,24 @@ def search_good_first_issues(skills: List[str], max_results: int = 15) -> List[D
             params=params,
             timeout=10
         )
+        
+        print(f"📊 Response status: {response.status_code}")
+        
+        if response.status_code == 401:
+            print("❌ Authentication failed! Check your GitHub token.")
+            return []
+        
+        if response.status_code == 403:
+            print("❌ Rate limit exceeded or insufficient permissions!")
+            print(f"Rate limit: {response.headers.get('X-RateLimit-Remaining', 'unknown')}/{response.headers.get('X-RateLimit-Limit', 'unknown')}")
+            return []
+        
         response.raise_for_status()
         
         data = response.json()
+        total_count = data.get("total_count", 0)
+        print(f"✅ GitHub returned {total_count} total issues")
+        
         issues = []
         
         for item in data.get("items", []):
@@ -56,11 +110,13 @@ def search_good_first_issues(skills: List[str], max_results: int = 15) -> List[D
                 "labels": [label["name"] for label in item.get("labels", [])]
             })
         
+        print(f"✅ Processed {len(issues)} issues")
         return issues
     
     except Exception as e:
-        print(f"Error fetching issues: {e}")
+        print(f"❌ Error fetching issues: {e}")
         return []
+
 
 
 def get_issue_details(issue_api_url: str) -> Dict:
@@ -73,10 +129,11 @@ def get_issue_details(issue_api_url: str) -> Dict:
     Returns:
         Dictionary with issue body, comments, and related file info
     """
-    headers = {
-        "Authorization": f"token {GITHUB_TOKEN}",
-        "Accept": "application/vnd.github.v3+json"
-    }
+    try:
+        headers = _get_headers()
+    except ValueError as e:
+        print(f"❌ ERROR: {e}")
+        return {"title": "", "body": "", "comments": []}
     
     try:
         # Get issue details
@@ -101,5 +158,5 @@ def get_issue_details(issue_api_url: str) -> Dict:
         }
     
     except Exception as e:
-        print(f"Error fetching issue details: {e}")
+        print(f"❌ Error fetching issue details: {e}")
         return {"title": "", "body": "", "comments": []}

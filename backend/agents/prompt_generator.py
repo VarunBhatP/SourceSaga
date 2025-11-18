@@ -1,41 +1,28 @@
 """
-Agent: Generate optimized prompts for code generation LLMs.
+Agent: Generate optimized prompts using Cerebras Llama 3.1 8B.
+8B model is perfect for shorter, structured outputs.
 """
 from typing import Dict
 from graph.state import AgentState
-from utils.llm_client import query_llm
-
-LLAMA_MODEL = "meta-llama/Llama-3-8b-chat-hf"
+from utils.cerebras_client import query_cerebras
 
 
 def generate_prompt_agent(state: AgentState) -> Dict:
     """
-    Create 'golden prompts' that users can feed to coding LLMs.
-    
-    Args:
-        state: Current agent state with 'analyses' containing solution plans
-        
-    Returns:
-        Updated state with generated prompts added to analyses
+    Create 'golden prompts' using Llama 3.1 8B.
+    Fast model optimized for structured, shorter outputs.
     """
     print("✨ Agent: Generating AI-ready prompts...")
     
     analyses = state.get("analyses", [])
     
     for analysis in analyses:
-        context = analysis["context"]
-        plan = analysis["solution_plan"]
+        context = analysis["context"][:900]
+        plan = analysis["solution_plan"][:700]
         
-        meta_prompt = f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|>
-You are an expert prompt engineer for software development.<|eot_id|>
+        prompt = f"""You are an expert at writing prompts for AI coding assistants.
 
-<|start_header_id|>user<|end_header_id|>
-Create a single, comprehensive prompt for a code-generation AI (like Code Llama or GitHub Copilot). This prompt should allow the AI to write the complete implementation code.
-
-Include:
-1. Full technical context
-2. The step-by-step plan
-3. Clear instructions on what to generate
+Create a detailed, comprehensive coding prompt:
 
 **Issue Context:**
 {context}
@@ -43,14 +30,34 @@ Include:
 **Solution Plan:**
 {plan}
 
-Generate the optimized prompt now.<|eot_id|>
+Write a well-structured prompt that includes:
+1. Clear problem description
+2. Technical requirements
+3. Expected code structure
+4. Testing requirements
 
-<|start_header_id|>assistant<|end_header_id|>"""
+Write the complete prompt that a developer can paste into ChatGPT/Claude:"""
         
         print(f"  Creating prompt for: {analysis['issue_url'][:50]}...")
-        generated_prompt = query_llm(LLAMA_MODEL, meta_prompt, max_tokens=700)
         
-        analysis["generated_prompt"] = generated_prompt or "Error generating prompt"
+        generated_prompt = query_cerebras(
+            prompt, 
+            max_tokens=600, 
+            temperature=0.6,
+            model="llama3.1-8b"  # ✅ Fast for shorter outputs
+        )
+        
+        if not generated_prompt:
+            generated_prompt = f"""Generate code to solve this GitHub issue:
+
+{context[:300]}
+
+Follow this technical approach:
+{plan[:300]}
+
+Provide complete, production-ready code with documentation."""
+        
+        analysis["generated_prompt"] = generated_prompt
     
     print("✅ Prompts generated")
     

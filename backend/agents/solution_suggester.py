@@ -1,42 +1,50 @@
 """
-Agent: Generate technical solution plans using Code Llama.
+Agent: Generate technical solution plans using Cerebras Llama 3.3 70B.
 """
 from typing import Dict
 from graph.state import AgentState
-from utils.llm_client import query_llm
-
-CODE_LLAMA_MODEL = "codellama/CodeLlama-34b-Instruct-hf"
+from utils.cerebras_client import query_cerebras
 
 
 def suggest_solution_agent(state: AgentState) -> Dict:
     """
-    Generate step-by-step technical plans for each analyzed issue.
-    
-    Args:
-        state: Current agent state with 'analyses'
-        
-    Returns:
-        Updated state with solution plans added to analyses
+    Generate step-by-step technical plans using Llama 3.3 70B.
+    This is Cerebras's most powerful available model.
     """
     print("🧠 Agent: Generating solution plans...")
     
     analyses = state.get("analyses", [])
     
     for analysis in analyses:
-        context = analysis["context"]
+        context = analysis["context"][:1500]
         
-        prompt = f"""<s>[INST] You are an expert software developer helping someone contribute to open source.
+        prompt = f"""You are an expert software engineer analyzing a GitHub issue.
 
-Analyze the following GitHub issue and provide a clear, step-by-step technical plan to solve it.
+Analyze this issue and provide a detailed, step-by-step solution plan:
 
 {context}
 
-Provide a numbered, actionable plan. Be specific about what files might need to be changed and what logic to implement. [/INST]"""
+Provide a numbered action plan (6-10 steps) with:
+- Specific files to modify
+- Technical implementation details
+- Code structure recommendations
+- Testing approach
+
+Be thorough and technically precise:"""
         
         print(f"  Generating plan for: {analysis['issue_url'][:50]}...")
-        solution_plan = query_llm(CODE_LLAMA_MODEL, prompt, max_tokens=600)
         
-        analysis["solution_plan"] = solution_plan or "Error generating plan"
+        solution_plan = query_cerebras(
+            prompt, 
+            max_tokens=800,
+            temperature=0.6,
+            model="llama-3.3-70b"  # ✅ Using available 70B model
+        )
+        
+        if not solution_plan:
+            solution_plan = "Unable to generate plan. AI service temporarily unavailable."
+        
+        analysis["solution_plan"] = solution_plan
     
     print("✅ Solution plans generated")
     
