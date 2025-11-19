@@ -1,27 +1,26 @@
 """
-Conditional routing logic for the LangGraph workflow.
+Conditional routing logic for LangGraph workflow.
 """
 from graph.state import AgentState
-from typing import Literal
 
 
-def route_after_feedback(
-    state: AgentState
-) -> Literal["draft_reports", "find_more_issues", "end"]:
+def route_after_feedback(state: AgentState) -> str:
     """
-    Route the workflow based on user's feedback choice.
+    Route after generating prompts based on user choice.
     
-    Args:
-        state: Current agent state with 'user_choice'
-        
-    Returns:
-        The name of the next node to execute
+    Options:
+    - "draft_report": Generate GSOC proposal documents
+    - "find_more": Search for more issues
+    - "end": Finish workflow
     """
-    choice = state.get("user_choice", "end")
+    user_choice = state.get("user_choice")
     
-    if choice == "draft_report":
+    print(f"🔀 Router: user_choice = {user_choice}")
+    
+    if user_choice == "draft_report":
         return "draft_reports"
-    elif choice == "find_more":
+    elif user_choice == "find_more":
         return "find_more_issues"
     else:
+        # Default to end
         return "end"

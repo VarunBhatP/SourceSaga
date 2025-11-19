@@ -120,6 +120,8 @@ This contribution will significantly enhance the project's functionality and use
     print(f"✅ {len(downloads)} proposals drafted")
     
     return {
+        "analyses": analyses,  # ✅ Keep the analyses!
         "report_downloads": downloads,
         "current_step": "reports_ready"
     }
+
