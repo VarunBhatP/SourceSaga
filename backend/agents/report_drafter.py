@@ -114,7 +114,7 @@ This contribution will significantly enhance the project's functionality and use
         issue_title = analysis["context"].split("\n")[0].replace("**Issue Title:** ", "")
         downloads.append({
             "issue_title": issue_title[:60],
-            "download_url": f"{base_url}/download/{filename}"
+            "download_url": f"{base_url}/api/download/{filename}"
         })
     
     print(f"✅ {len(downloads)} proposals drafted")

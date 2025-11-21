@@ -49,16 +49,10 @@ app = FastAPI(
 )
 
 
-# CORS Configuration (for React frontend)
+# CORS Configuration (Fixed)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",  # React dev server
-        "http://localhost:5173",  # Vite dev server
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:5173",
-        # Add production URL later
-    ],
+    allow_origins=["*"],  # ✅ Allow ALL origins for dev (easiest)
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -88,10 +82,6 @@ async def root():
     }
 
 
-# Mount static files for downloads (optional, routes.py handles this)
-# app.mount("/downloads", StaticFiles(directory="downloads"), name="downloads")
-
-
 if __name__ == "__main__":
     import uvicorn
     
@@ -100,6 +90,6 @@ if __name__ == "__main__":
         "app:app",
         host="0.0.0.0",
         port=8000,
-        reload=True,  # Auto-reload on code changes
+        reload=True,
         log_level="info"
     )
