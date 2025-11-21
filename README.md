@@ -4,19 +4,19 @@
 
 SourceSage is an AI-powered intelligent assistant that helps developers find "good first issues" on GitHub, analyzes them, and drafts professional GSOC proposals instantly.
 
-![SourceSage Demo](https://via.placeholder.com/1200x600?text=SourceSage+Dashboard+Preview) 
-*(Replace this link with a real screenshot of your beautiful frontend)*
+![SourceSage Demo](https://drive.google.com/file/d/1SoP59hN9_TqpIc1XiVjAy-wB9uVUYzIH/view?usp=drive_link) 
+
 
 ---
 
 ## ✨ Features
 
-- **🔍 Smart Issue Search**: Find beginner-friendly GitHub issues based on your specific skills (e.g., "Python, React, FastAPI").
-- **🧠 AI Analysis**: Uses **Cerebras AI (Llama 3)** to analyze issue context and generate a step-by-step technical solution plan.
-- **📝 Auto-Draft Proposals**: Generates professional, download-ready GSOC proposals in `.docx` format.
-- **⚡ Real-Time Insights**: Powered by **FastAPI** and **LangGraph** for agentic workflows.
-- **🎨 Premium UI**: Stunning, responsive frontend built with **React**, **Tailwind CSS**, and **Shadcn UI**.
-- **🌗 Dark Mode**: Fully supported dark mode for late-night coding sessions.
+- **Smart Issue Search**: Find beginner-friendly GitHub issues based on your specific skills (e.g., "Python, React, FastAPI").
+- **AI Analysis**: Uses **Cerebras AI (Llama 3)** to analyze issue context and generate a step-by-step technical solution plan.
+- **Auto-Draft Proposals**: Generates professional, download-ready GSOC proposals in `.docx` format.
+- **Real-Time Insights**: Powered by **FastAPI** and **LangGraph** for agentic workflows.
+- **Premium UI**: Stunning, responsive frontend built with **React**, **Tailwind CSS**, and **Shadcn UI**.
+- **Dark Mode**: Fully supported dark mode for late-night coding sessions.
 
 ---
 
@@ -47,7 +47,7 @@ SourceSage is an AI-powered intelligent assistant that helps developers find "go
 - Cerebras API Key (Get one [here](https://cerebras.ai))
 
 ### 1. Clone the Repository
-git clone https://github.com/yourusername/sourcesage.git
+git clone https://github.com/VarunBhatP/sourcesage.git
 cd sourcesage
 
 
@@ -95,23 +95,23 @@ text
 
 ## 📂 Project Structure
 
-sourcesage/
-├── backend/
-│ ├── agents/ # AI Agents (Analysis, Report Drafter)
-│ ├── api/ # FastAPI Routes & Models
-│ ├── database/ # MongoDB Connection & Caching
-│ ├── graph/ # LangGraph State & Workflow
-│ ├── utils/ # Helper functions
-│ ├── app.py # Main Application Entry
-│ └── run.py # Server Runner
-│
-└── frontend/
-├── src/
-│ ├── components/ # React Components (Hero, IssuesList, AnalysisView)
-│ ├── lib/ # Utilities (Tailwind merge, API client)
-│ ├── pages/ # Main Pages (Index)
-│ └── App.jsx # Main App Component
-└── package.json
+### sourcesage/
+### ├── backend/
+### │ ├── agents/ # AI Agents (Analysis, Report Drafter)
+### │ ├── api/ # FastAPI Routes & Models
+### │ ├── database/ # MongoDB Connection & Caching
+### │ ├── graph/ # LangGraph State & Workflow
+### │ ├── utils/ # Helper functions
+### │ ├── app.py # Main Application Entry
+### │ └── run.py # Server Runner
+### │
+### └── frontend/
+### ├── src/
+### │ ├── components/ # React Components (Hero, IssuesList, AnalysisView)
+### │ ├── lib/ # Utilities (Tailwind merge, API client)
+### │ ├── pages/ # Main Pages (Index)
+### │ └── App.jsx # Main App Component
+### └── package.json
 
 text
 
