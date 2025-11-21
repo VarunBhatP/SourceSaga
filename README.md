@@ -3,9 +3,7 @@
 **Find Your Perfect Open Source Contribution with AI**
 
 SourceSage is an AI-powered intelligent assistant that helps developers find "good first issues" on GitHub, analyzes them, and drafts professional GSOC proposals instantly.
-
-![SourceSage Demo](https://drive.google.com/file/d/1SoP59hN9_TqpIc1XiVjAy-wB9uVUYzIH/view?usp=drive_link) 
-
+ 
 
 ---
 
