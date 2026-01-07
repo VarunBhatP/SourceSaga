@@ -1,0 +1,24 @@
+services:
+  saga_frontend:
+    build:
+      context: frontend/.
+    container_name: saga_frontend_yml
+    networks:
+      - source_saga
+    ports:
+      - "8080:8080"
+    command: ["npm", "run", "dev"]
+
+  saga_backend:
+    build:
+      context: backend/.
+    container_name: saga_backend_yml
+    networks:
+      - source_saga
+    ports:
+      - "8000:8000"
+    command: ["python", "run.py"]
+
+networks:
+    source_saga:
+
