@@ -19,6 +19,12 @@ interface IssueCardProps {
 }
 
 export function IssueCard({ issue, isSelected, onToggle }: IssueCardProps) {
+  const repoUrl = issue.url.replace(/\/issues\/\d+.*$/, "");
+  const handleOpenRepo = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    window.open(repoUrl, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -54,16 +60,14 @@ export function IssueCard({ issue, isSelected, onToggle }: IssueCardProps) {
               </div>
             </div>
             
-            <a
-              href={issue.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
+            <button
+              type="button"
+              onClick={handleOpenRepo}
               className="flex-shrink-0 rounded-full p-2 transition-colors hover:bg-accent"
-              aria-label="Open issue on GitHub"
+              aria-label="Open repository on GitHub"
             >
               <ExternalLink className="h-4 w-4" />
-            </a>
+            </button>
           </div>
 
           {issue.description && (

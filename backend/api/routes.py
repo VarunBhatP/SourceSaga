@@ -18,6 +18,16 @@ from database.cache import cache_github_search, get_cached_search, cache_analysi
 router = APIRouter(prefix="/api", tags=["api"])
 
 
+def _is_analysis_complete(analysis: dict) -> bool:
+    """Return True when the cached analysis has the fields the UI depends on."""
+    if not analysis:
+        return False
+
+    solution_plan = str(analysis.get("solution_plan", "")).strip()
+    generated_prompt = str(analysis.get("generated_prompt", "")).strip()
+    return bool(solution_plan and generated_prompt)
+
+
 @router.get("/health", response_model=HealthResponse)
 async def health_check():
     """Health check endpoint."""
@@ -25,7 +35,7 @@ async def health_check():
         status="healthy",
         services={
             "github": "✅" if os.getenv("GITHUB_TOKEN") else "❌",
-            "cerebras": "✅" if os.getenv("CEREBRAS_API_KEY") else "❌",
+            "grok": "✅" if os.getenv("XAI_API_KEY") else "❌",
             "mongodb": "✅" if os.getenv("MONGODB_URL") else "⚠️ optional"
         }
     )
@@ -93,10 +103,12 @@ async def analyze_issues(request: AnalyzeIssuesRequest):
         
         for url in request.issue_urls:
             cached = await get_cached_analysis(url)
-            if cached:
+            if cached and _is_analysis_complete(cached):
                 print(f"✅ Using cached analysis for: {url}")
                 cached_analyses.append(cached)
             else:
+                if cached:
+                    print(f"⚠️ Cached analysis incomplete for: {url}. Regenerating...")
                 uncached_urls.append(url)
         
         # Analyze uncached issues

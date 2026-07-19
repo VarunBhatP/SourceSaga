@@ -4,7 +4,6 @@ langchain>=0.1.0
 langchain-core>=0.1.0
 
 # LLM Providers
-cerebras-cloud-sdk>=1.0.0
 google-generativeai>=0.3.0
 openai>=1.0.0
 

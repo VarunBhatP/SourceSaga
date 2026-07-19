@@ -10,7 +10,7 @@ SourceSage is an AI-powered intelligent assistant that helps developers find "go
 ## ✨ Features
 
 - **Smart Issue Search**: Find beginner-friendly GitHub issues based on your specific skills (e.g., "Python, React, FastAPI").
-- **AI Analysis**: Uses **Cerebras AI (Llama 3)** to analyze issue context and generate a step-by-step technical solution plan.
+- **AI Analysis**: Uses **Grok via xAI API** to analyze issue context and generate a step-by-step technical solution plan.
 - **Auto-Draft Proposals**: Generates professional, download-ready GSOC proposals in `.docx` format.
 - **Real-Time Insights**: Powered by **FastAPI** and **LangGraph** for agentic workflows.
 - **Premium UI**: Stunning, responsive frontend built with **React**, **Tailwind CSS**, and **Shadcn UI**.
@@ -22,7 +22,7 @@ SourceSage is an AI-powered intelligent assistant that helps developers find "go
 
 ### **Backend**
 - **Framework**: FastAPI (Python)
-- **AI/LLM**: Cerebras API (Llama 3.1-8b & Llama 3.3-70b)
+- **AI/LLM**: xAI Grok API (`grok-3-mini`, `grok-4.1-fast`)
 - **Orchestration**: LangGraph (Agentic workflow)
 - **Database**: MongoDB (Caching analyses)
 - **Tools**: `crewai`, `python-docx`
@@ -42,7 +42,7 @@ SourceSage is an AI-powered intelligent assistant that helps developers find "go
 - Python 3.10+
 - Node.js 18+
 - MongoDB (Local or Atlas)
-- Cerebras API Key (Get one [here](https://cerebras.ai))
+- xAI API Key for Grok (Get one at [xAI Console](https://console.x.ai))
 
 ### 1. Clone the Repository
 git clone https://github.com/VarunBhatP/sourcesage.git
@@ -66,7 +66,7 @@ pip install -r requirements.txt
 
 #### 2.4. Set up environment variables
 ##### Create a .env file in /backend with:
-CEREBRAS_API_KEY=your_key_here
+XAI_API_KEY=your_key_here
 MONGODB_URL=mongodb://localhost:27017
 #### 2.5. Run the server
 python run.py
@@ -132,5 +132,5 @@ Contributions are what make the open source community such an amazing place to l
 ---
 
 <p align="center">
-  Built by <a href="https://github.com/VarunBhatP">Varun Bhat P</a> using <b>Cerebras AI</b>
+  Built by <a href="https://github.com/VarunBhatP">Varun Bhat P</a> using <b>Grok</b>
 </p>
