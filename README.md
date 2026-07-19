@@ -132,5 +132,5 @@ Contributions are what make the open source community such an amazing place to l
 ---
 
 <p align="center">
-  Built by <a href="https://github.com/VarunBhatP">Varun Bhat P</a> using <b>Grok</b>
+  Built by <a href="https://github.com/VarunBhatP">Varun Bhat P</a> 
 </p>
